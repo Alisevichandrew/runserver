@@ -215,7 +215,108 @@ path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 66. Go back into the http://127.0.0.1:8000/api/token/refresh/
 67. Your won't to see the resfresh token
 68. Go into https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html
-69. 
+69. Copy the code:
+
+	from datetime import timedelta
+...
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': False,
+    'UPDATE_LAST_LOGIN': False,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+70. Go to the backend -> settings
+71. Paste the code after the 
+
+	REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )    
+}     
+
+72. Deleted '...'
+73. Remove the           from datetime import timedelta
+74. Paste after
+    
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+75. Go to the 'SIMPLE_JWT = {'
+76. Delete ''SIGNING_KEY': SECRET_KEY,'
+77. Rewrite ''REFRESH_TOKEN_LIFETIME': timedelta(days=90),'
+78. (environment) PS C:\Users\HP\Desktop\backend> python manage.py runserver 
+79. In the browser go into http://127.0.0.1:8000/api/token/
+80. enter 'POST'
+81. Copy the refresh token
+82. In the browser go into http://127.0.0.1:8000/api/token/refresh
+83. Paste refresh token into 'Refresh'
+84. Enter 'POST' and give your new "access" token
+85. Rewrite ''ROTATE_REFRESH_TOKENS': True,'
+86. In the browser go into http://127.0.0.1:8000/api/token/refresh
+87. Paste refresh token into 'Refresh'
+88. Enter 'POST' and give your new "access" and "refresh" tokens
+89. Paste refresh token into 'Refresh'. Enter 'POST' and give your new "access" and "refresh" tokens again.
+90. It is vey dangerous (ROTATE_REFRESH_TOKENS)
+91. For that reason Go into and rewrite  'BLACKLIST_AFTER_ROTATION': True,
+92. Into the browser go into the https://django-rest-framework-simplejwt.readthedocs.io/en/latest/settings.html        'BLACKLIST_AFTER_ROTATION'
+93. Copy the code 'rest_framework_simplejwt.token_blacklist'
+94. Go to the backend -> settings
+95. Paste the code after   
+
+	INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+
+    'base.apps.BaseConfig',
+
+     'rest_framework',
+
+95. Write (environment) PS C:\Users\HP\Desktop\backend> python manage.py migrate
+96. Write (environment) PS C:\Users\HP\Desktop\backend> python manage.py runserver 
+97. Go into http://127.0.0.1:8000/api/token/refresh/
+98. Copty refresh token
+99. Paste into 'Refresh'
+100. Your again will see "access": and "refresh": tokens and when your again copy 'refresh' and paste into 'Refresh', your will see 
+	
+{
+    "detail": "Token is blacklisted",
+    "code": "token_not_valid"
+}
+
+   
+
 
 
 
