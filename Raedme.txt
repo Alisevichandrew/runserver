@@ -1,7 +1,7 @@
 To begin this poject, follow information, which derscribe below :
 
 1. Into the desktop open command prompt. 
-2. Your will see the way (only in me computer): C:\Users\HP> 
+2. Your will see the way (only in my computer): C:\Users\HP> 
 3. Write 'cd desktop'  
 4. Create the virual invirinment: python -m venv environment  
 5. Activate the virual invirinment: environment\scripts\activate
