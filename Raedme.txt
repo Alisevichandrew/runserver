@@ -315,6 +315,105 @@ BASE_DIR = Path(__file__).resolve().parent.parent
     "code": "token_not_valid"
 }
 
+
+101.Go into https://django-rest-framework-simplejwt.readthedocs.io/en/latest/customizing_token_claims.html
+102. Copy     
+
+	from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+	from rest_framework_simplejwt.views import TokenObtainPairView
+103. Go into     backend -> base -> api -> views.py
+104. Paste the code after 
+
+	from rest_framework.decorators import api_view
+
+
+105. Go into https://django-rest-framework-simplejwt.readthedocs.io/en/latest/customizing_token_claims.html
+106. Copy
+ 	
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['name'] = user.name
+        # ...
+
+        return token
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+107. Go into the way backend -> base -> api -> views.py
+108. Paste the code after 
+	
+	from rest_framework_simplejwt.views import TokenObtainPairView
+109. Into the way  backend -> base -> api -> views.py      rewrite    
+
+	# Add custom claims
+        token['username'] = user.username
+
+110. Go into the way backend -> base -> api -> urls.py
+111. Clear      TokenObtainPairView,         after the    from rest_framework_simplejwt.views import (
+112. REwrite     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+113. Add   from .views import MyTokenObtainPairView
+114. Go into http://127.0.0.1:8000/api/token/
+115. Submit username and password. Click 'POST'
+116. And your will see refresh and new token
+117. Copy "access" token and go into the https://jwt.io/
+118. Paste the token into EncodedPASTE A TOKEN HERE
+119. Now your will see "username": (it's cool)
+120. Go into https://github.com/adamchainz/django-cors-headers
+121. Copy from Setup   Install from pip:
+	 
+	python -m pip install django-cors-headers
+122. Go into (environment) PS C:\Users\HP\Desktop\backend> 
+123. Write   python -m pip install django-cors-headers
+124. Go into https://github.com/adamchainz/django-cors-headers
+125. Copy from Setup   Install from pip:
+
+	"corsheaders",
+126. Go into backend -> settings
+127. After the     'rest_framework_simplejwt.token_blacklist',      paste
+
+	"corsheaders",
+128. Go into https://github.com/adamchainz/django-cors-headers
+129. After the  
+
+	You will also need to add a middleware class to listen in on responses:
+
+MIDDLEWARE = [
+    ...,
+    
+130. Copy
+	
+	"corsheaders.middleware.CorsMiddleware",
+
+131. Go into backend -> settings
+132. After the 
+
+	MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+
+133. Paste 
+
+	"corsheaders.middleware.CorsMiddleware",
+
+134. Go into https://github.com/adamchainz/django-cors-headers 
+135. After the Configuration     copy    CORS_ALLOW_ALL_ORIGINS
+136. Go into backend -> settings.py
+134. After the     DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'    (at the end)
+135. Paste     CORS_ALLOW_ALL_ORIGINS and add  'True', as a result:
+
+	DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+	CORS_ALLOW_ALL_ORIGINS = True
+
+136. Write (environment) PS C:\Users\HP\Desktop\backend> python manage.py runserver 
+137. Go into http://127.0.0.1:8000/api/token/ to check the working of refresh token
+
+
+
    
 
 
